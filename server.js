@@ -3,8 +3,10 @@ var bodyParser = require('body-parser');
 
 var app = express();
 var PORT = process.env.PORT || 3000;
-
 var todos = [];
+var todoNextId = 1;
+
+app.use(bodyParser.json());
 
 app.get('/', function(request, response) {
   response.send('ToDo App is launched! on Root');

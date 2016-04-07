@@ -1,20 +1,10 @@
 var express = require('express');
+var bodyParser = require('body-parser');
+
 var app = express();
 var PORT = process.env.PORT || 3000;
 
-var todos = [{
-  id:1,
-  description: 'go do something',
-  completed: false
-},{
-  id:2,
-  description: 'go do something else',
-  completed: false
-},{
-  id:3,
-  description: 'go do something completely different',
-  completed: true
-}];
+var todos = [];
 
 app.get('/', function(request, response) {
   response.send('ToDo App is launched! on Root');

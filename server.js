@@ -21,12 +21,7 @@ app.get('/todos/:id', function(request, response) {
 
   var input_id = parseInt(request.params.id,10);
   var result = _.findWhere(todos, {id: input_id});
-  // var result = null;
-  // todos.forEach(function(value, index) {
-  //   if (value.id === input_id){
-  //      result = value;
-  //   }
-  // });
+
   if (result) {
     response.json(result);
   } else {
@@ -36,11 +31,13 @@ app.get('/todos/:id', function(request, response) {
 
 app.post('/todos', function (request, response) {
   var body = request.body;
-  console.log('description' + body.description);
+  if (!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length ===0) {
+    return response.status(400).send();
+  }
   body.id = todoNextId++;
   todos.push(body);
   response.json(body);
-})
+});
 
 
 app.listen(PORT, function() {

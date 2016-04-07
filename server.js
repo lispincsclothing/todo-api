@@ -33,6 +33,14 @@ app.get('/todos/:id', function(request, response) {
   }
 });
 
+app.post('/todos', function (request, response) {
+  var body = request.body;
+  console.log('description' + body.description);
+  body.id = todoNextId++;
+  todos.push(body);
+  response.json(body);
+})
+
 
 app.listen(PORT, function() {
   console.log('Express listening on port ' + PORT );

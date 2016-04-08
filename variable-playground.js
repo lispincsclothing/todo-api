@@ -29,6 +29,7 @@ var addGrade = function (arr) {
 // add grade
 var addGradeDestructive = function (arr){
   arr.push(55);
+  debugger;
 }
 //
 

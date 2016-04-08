@@ -13,15 +13,23 @@ app.get('/', function(request, response) {
   response.send('ToDo App is launched! on Root');
 });
 
-// add query params - completed:
+// add query params - completed + keyword search:
 app.get('/todos', function(request, response) {
   var queryParams = request.query;
   var filteredTodos = todos;
+
   if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'true'){
     filteredTodos = _.where(filteredTodos, {completed: true})
   } else if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'false'){
     filteredTodos = _.where(filteredTodos, {completed: false})
   }
+
+  if (queryParams.hasOwnProperty('word') && queryParams.word.length > 0){
+    filteredTodos = _.filter(filteredTodos, function (todo) {
+      return todo.description.toLowerCase().indexOf(queryParams.word.toLowerCase()) >-1;
+    });
+  }
+
   response.json(filteredTodos);
 });
 

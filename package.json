@@ -12,9 +12,10 @@
   "dependencies": {
     "babel-eslint": "^6.0.2",
     "body-parser": "^1.13.3",
-    "eslint-plugin-react": "^4.3.0",
     "express": "^4.13.2",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "sequelize": "^3.5.1",
+    "sqlite3": "^3.0.10"
   },
   "devDependencies": {
     "babel-eslint": "^6.0.2",

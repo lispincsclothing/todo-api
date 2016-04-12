@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "babel-eslint": "^6.0.2",
     "body-parser": "^1.13.3",
     "express": "^4.13.2",
     "underscore": "^1.8.3",

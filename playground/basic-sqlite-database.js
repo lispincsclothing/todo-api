@@ -6,10 +6,16 @@ var sequelize = new Sequelize(undefined, undefined, undefined, {
 
 var Todo = sequelize.define('todo', {
   description: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      len: [1,250]
+    }
   },
   completed: {
-    type: Sequelize.BOOLEAN
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
   }
 });
 
@@ -18,9 +24,14 @@ sequelize.sync({logging: console.log, force: true}).then(function () {
 
   Todo.create({
     description: 'Walking my dog',
-    completed: false
   }).then(function (todo) {
       console.log('Finished!');
       console.log(todo);
+  }).then(function functionName(todo) {
+    return Todo.create({
+      
+    })
+  }).catch(function (e) {
+      console.log(e);
   });
 });

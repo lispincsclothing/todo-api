@@ -17,8 +17,8 @@
     "sqlite3": "^3.0.10"
   },
   "devDependencies": {
-    "babel-eslint": "^6.0.2",
-    "eslint": "^2.7.0",
+    "babel-eslint": "^6.0.3",
+    "eslint": "^2.8.0",
     "eslint-plugin-react": "^4.3.0"
   }
 }

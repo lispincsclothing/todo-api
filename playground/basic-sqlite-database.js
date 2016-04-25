@@ -19,19 +19,46 @@ var Todo = sequelize.define('todo', {
   }
 });
 
-sequelize.sync({logging: console.log, force: true}).then(function () {
+sequelize.sync({
+  // force: true,  //no longer recreating database every time using force: true
+  logging: console.log
+}).then(function () {
   console.log('Everything is synced');
 
-  Todo.create({
-    description: 'Walking my dog',
-  }).then(function (todo) {
-      console.log('Finished!');
-      console.log(todo);
-  }).then(function functionName(todo) {
-    return Todo.create({
-      
-    })
-  }).catch(function (e) {
-      console.log(e);
+  Todo.findById(1)
+  .then(function(todo, error) {
+    if(todo){
+      console.log(todo.toJSON());
+    }
+    else {
+      console.log('todo not found');
+    }
   });
+
+  // Todo.create({
+  //   description: 'Walking my dog'
+  // }).then(function(todo) {
+  //   return Todo.create({
+  //     description: 'Clean office'
+  //   })
+  // }).then(function() {
+  //   // return Todo.findById(1);
+  //   return Todo.findAll({
+  //     where: {
+  //       description: {
+  //         $like: '%Office%'
+  //       }
+  //     }
+  //   });
+  // }).then(function (todos) {
+  //   if (todos) {
+  //     todos.forEach(function (todo) {
+  //       console.log(todo.toJSON());
+  //     });
+  //   } else {
+  //     console.log('No todo found');
+  //   }
+  // }).catch(function (e) {
+  //     console.log(e);
+  // });
 });

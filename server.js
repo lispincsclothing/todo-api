@@ -41,34 +41,28 @@ app.get('/todos', function(request, response) {
 app.get('/todos/:id', function(request, response) {
 
     var input_id = parseInt(request.params.id, 10);
-    var result = _.findWhere(todos, {
-        id: input_id
-    });
 
-    if (result) {
-        response.json(result);
-    } else {
-        response.status(404).send();
-    }
+    db.todo.findById(input_id)
+    .then(function(todo) {
+        if (!!todo) {  //converting to truth version (using !!) because todo will be null or object - looking for null
+            response.json(todo.toJSON());
+        } else {
+            response.status(404).send();
+        }
+    }, function(e) {
+        response.status(500).send(e);
+    });
 });
 
 app.post('/todos', function(request, response) {
     var body = _.pick(request.body, 'completed', 'description');
 
     db.todo.create(body)
-    .then(function(todo) {
-        response.json(todo.toJSON());
-    }, function(e) {
-        response.status(400).json(e);
-    });
-
-    // if (!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length ===0) {
-    //   return response.status(400).send();
-    // }
-    // body.description = body.description.trim();
-    // body.id = todoNextId++;
-    // todos.push(body);
-    // response.json(body);
+        .then(function(todo) {
+            response.json(todo.toJSON());
+        }, function(e) {
+            response.status(400).json(e);
+        });
 });
 
 

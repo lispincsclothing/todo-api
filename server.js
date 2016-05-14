@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var _ = require('lodash');
 var db = require('./db.js');
 var bcrypt = require('bcrypt');
+var middleware = require('./middleware.js')(db);
 
 var app = express();
 var PORT = process.env.PORT || 3000;
@@ -16,7 +17,7 @@ app.get('/', function(request, response) {
 });
 
 // add query params - completed + keyword search:
-app.get('/todos', function(request, response) {
+app.get('/todos', middleware.requireAuthentication, function(request, response) {
     var query = request.query;
     var where = {};
 
@@ -42,7 +43,7 @@ app.get('/todos', function(request, response) {
         })
 });
 
-app.get('/todos/:id', function(request, response) {
+app.get('/todos/:id', middleware.requireAuthentication, function(request, response) {
 
     var input_id = parseInt(request.params.id, 10);
 
@@ -58,7 +59,7 @@ app.get('/todos/:id', function(request, response) {
         });
 });
 
-app.post('/todos', function(request, response) {
+app.post('/todos', middleware.requireAuthentication, function(request, response) {
     var body = _.pick(request.body, 'completed', 'description');
 
     db.todo.create(body)
@@ -70,7 +71,7 @@ app.post('/todos', function(request, response) {
 });
 
 
-app.delete('/todos/:id', function(request, response) {
+app.delete('/todos/:id', middleware.requireAuthentication, function(request, response) {
     var input_id = parseInt(request.params.id, 10);
 
     db.todo.destroy({
@@ -91,7 +92,7 @@ app.delete('/todos/:id', function(request, response) {
         });
 });
 
-app.put('/todos/:id', function(request, response) {
+app.put('/todos/:id', middleware.requireAuthentication, function(request, response) {
     var input_id = parseInt(request.params.id, 10);
 
 

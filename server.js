@@ -137,26 +137,15 @@ app.put('/todos/:id', function(request, response) {
   app.post('/users/login', function (request, response) {
     var body = _.pick(request.body, 'email', 'password');
 
-    if ((typeof body.email !== 'string') || (typeof body.password !== 'string')) {
-      return response.status(400).send();
-    }
-
-    db.user.findOne({
-            where: {
-              email: body.email
-            }
-        })
-        .then(function(user) {
-          if (!user || !bcrypt.compareSync(body.password, user.get('password_hash'))) {
-            return response.status(401).send();
-          }
-          response.json(user.toPublicJSON());
-        }, function(e) {
-            response.status(500).send();
-        })
+    db.user.authenticate(body)
+    .then(function (user) {
+      response.json(user.toPublicJSON());
+    }, function () {
+      response.status(401).send();
+    })
   });
 
-db.sequelize.sync().then(function() {
+db.sequelize.sync({force:true}).then(function() {
     app.listen(PORT, function() {
         console.log('Express listening on port ' + PORT);
     });

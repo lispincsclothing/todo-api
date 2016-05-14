@@ -139,7 +139,13 @@ app.put('/todos/:id', function(request, response) {
 
     db.user.authenticate(body)
     .then(function (user) {
-      response.json(user.toPublicJSON());
+      var token = user.generateToken('authentication');
+
+      if (token) {
+        response.header('Auth', token ).json(user.toPublicJSON());
+      } else {
+        response.status(401).send();
+      }
     }, function () {
       response.status(401).send();
     })

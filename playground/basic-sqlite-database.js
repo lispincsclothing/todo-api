@@ -1,64 +1,59 @@
 var Sequelize = require('sequelize');
 var sequelize = new Sequelize(undefined, undefined, undefined, {
-  'dialect' : 'sqlite',
-  'storage' : __dirname + '/basic-sqlite-database.sqlite'
+    'dialect': 'sqlite',
+    'storage': __dirname + '/basic-sqlite-database.sqlite'
 });
 
 var Todo = sequelize.define('todo', {
-  description: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate: {
-      len: [1,250]
+    description: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        validate: {
+            len: [1, 250]
+        }
+    },
+    completed: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     }
-  },
-  completed: {
-    type: Sequelize.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
-  }
 });
 
+var User = sequelize.define('user', {
+    email: Sequelize.STRING
+});
+
+Todo.belongsTo(User);
+User.hasMany(Todo);
+
 sequelize.sync({
-  // force: true,  //no longer recreating database every time using force: true
-  logging: console.log
-}).then(function () {
-  console.log('Everything is synced');
+    // force: true,  //no longer recreating database every time using force: true
+    logging: console.log,
+    // force: true
+}).then(function() {
+    console.log('Everything is synced');
 
-  Todo.findById(1)
-  .then(function(todo, error) {
-    if(todo){
-      console.log(todo.toJSON());
-    }
-    else {
-      console.log('todo not found');
-    }
-  });
+    User.findById(1).then(function (user) {
+      user.getTodos({
+        where : {
+          completed : true
+        }
+      }).then(function (todos) {
+        todos.forEach(function (todo) {
+          console.log(todo.toJSON());
+        });
+      })
+    })
 
-  // Todo.create({
-  //   description: 'Walking my dog'
-  // }).then(function(todo) {
-  //   return Todo.create({
-  //     description: 'Clean office'
-  //   })
-  // }).then(function() {
-  //   // return Todo.findById(1);
-  //   return Todo.findAll({
-  //     where: {
-  //       description: {
-  //         $like: '%Office%'
-  //       }
-  //     }
-  //   });
-  // }).then(function (todos) {
-  //   if (todos) {
-  //     todos.forEach(function (todo) {
-  //       console.log(todo.toJSON());
-  //     });
-  //   } else {
-  //     console.log('No todo found');
-  //   }
-  // }).catch(function (e) {
-  //     console.log(e);
-  // });
+    // User.create({
+    //     email: 'Andrew@example.com'
+    // }).then(function() {
+    //       return Todo.create({
+    //         description: 'Clean yard'
+    //       });
+    // }).then(function (todo) {
+    //   User.findById(1).then(function (user) {
+    //     user.addTodo(todo);
+    //   })
+    // });
 });

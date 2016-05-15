@@ -19,7 +19,9 @@ app.get('/', function(request, response) {
 // add query params - completed + keyword search:
 app.get('/todos', middleware.requireAuthentication, function(request, response) {
     var query = request.query;
-    var where = {};
+    var where = {
+      userId: request.user.get('id')
+    };
 
     if (query.hasOwnProperty('completed') && query.completed === 'true') {
         where.completed = true;
@@ -47,7 +49,12 @@ app.get('/todos/:id', middleware.requireAuthentication, function(request, respon
 
     var input_id = parseInt(request.params.id, 10);
 
-    db.todo.findById(input_id)
+    db.todo.findOne({
+      where: {
+        id: input_id,
+        userId: request.user.get('id')
+      }
+    })
         .then(function(todo) {
             if (!!todo) { //converting to truth version (using !!) because todo will be null or object - looking for null
                 response.json(todo.toJSON());
@@ -79,10 +86,11 @@ app.delete('/todos/:id', middleware.requireAuthentication, function(request, res
     var input_id = parseInt(request.params.id, 10);
 
     db.todo.destroy({
-            where: {
-                id: input_id
-            }
-        })
+      where: {
+        id: input_id,
+        userId: request.user.get('id')
+      }
+    })
         .then(function(rowsDeleted) {
             if (rowsDeleted === 0) {
                 response.status(404).json({
@@ -111,7 +119,12 @@ app.put('/todos/:id', middleware.requireAuthentication, function(request, respon
         attributes.description = body.description;
     }
 
-    db.todo.findById(input_id).then(function(todo) {
+    db.todo.findOne({
+      where: {
+        id: input_id,
+        userId: request.user.get('id')
+      }
+    }).then(function(todo) {
         if (todo) {
             todo.update(attributes).then(function(todo) {
               response.json(todo.toJSON());

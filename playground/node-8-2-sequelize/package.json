@@ -11,7 +11,7 @@
   "dependencies": {
     "body-parser": "^1.13.3",
     "express": "^4.13.3",
-    "sequelize": "^3.5.1",
+    "sequelize": "^6.3.5",
     "sqlite3": "^3.0.10",
     "underscore": "^1.8.3"
   }
